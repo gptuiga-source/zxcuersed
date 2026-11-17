@@ -19,7 +19,8 @@ INSTALLED_APPS = [                                 # список подключ
     "django.contrib.messages",                     # всплывающие сообщения
     "django.contrib.staticfiles",                  # статика (css/js)
     'apps.accounts',
-    'apps.catalog'
+    'apps.catalog',
+    'apps.journal.apps.JournalConfig',
 ]
 
 MIDDLEWARE = [                                     # промежуточные слои между запросом и ответом
@@ -31,7 +32,7 @@ MIDDLEWARE = [                                     # промежуточные 
     "django.contrib.messages.middleware.MessageMiddleware",    # messages framework
 ]
 
-ROOT_URLCONF = "config.urls"                       # где лежит корневой urls.py
+ROOT_URLCONF = "priject.urls"                      # где лежит корневой urls.py
 
 TEMPLATES = [                                      # настройки шаблонов
     {
@@ -48,29 +49,19 @@ TEMPLATES = [                                      # настройки шабл
     },
 ]
 
-WSGI_APPLICATION = "config.wsgi.application"       # точка входа для сервера
+WSGI_APPLICATION = "priject.wsgi.application"     # точка входа для сервера
 AUTH_USER_MODEL = 'accounts.User'
 
-DATABASES = {                                      # настройки БД
+DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql", # драйвер PostgreSQL
-        "NAME": os.getenv("POSTGRES_DB"),          # имя БД
-        "USER": os.getenv("POSTGRES_USER"),        # пользователь
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),# пароль
-        "HOST": os.getenv("POSTGRES_HOST"),        # хост
-        "PORT": os.getenv("POSTGRES_PORT"),        # порт
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "ams"),
+        "USER": os.getenv("POSTGRES_USER", "ams"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "ams"),
+        "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
+        "PORT": os.getenv("POSTGRES_PORT", "5434"),
     }
 }
-
-CACHES = {                                         # кэш через Redis
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",  # встроенный Redis-бэкенд
-        "LOCATION": os.getenv("REDIS_URL"),        # адрес Redis
-    }
-}
-
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # сессии - в Redis
-SESSION_CACHE_ALIAS = "default"                            # какой кэш использовать
 
 LANGUAGE_CODE = "ru-ru"                            # русский язык
 TIME_ZONE = "Europe/Moscow"                        # московское время
@@ -78,7 +69,6 @@ USE_I18N = True                                    # включить перев
 USE_TZ = True                                      # хранить время с таймзоной
 
 STATIC_URL = "static/"                             # URL для статики
-STATICFILES_DIRS = [BASE_DIR / "static"]           # где искать статику
 MEDIA_URL = "media/"                               # URL для загруженных файлов
 MEDIA_ROOT = BASE_DIR / "media"                    # папка для файлов
 
